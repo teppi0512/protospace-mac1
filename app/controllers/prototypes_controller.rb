@@ -24,6 +24,7 @@ class PrototypesController < ApplicationController
   end
 
   def update
+    @prototype = Prototype.find(params[:id])
     if Prototype.update(prototype_params)
       redirect_to prototype_path
     else
@@ -39,6 +40,8 @@ class PrototypesController < ApplicationController
 
   def show
     @prototype = Prototype.find(params[:id])
+    @comment = Comment.new
+    @comments = @prototype.comments
   end
 
   private
