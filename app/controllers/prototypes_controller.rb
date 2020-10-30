@@ -1,5 +1,6 @@
 class PrototypesController < ApplicationController
-  
+  before_action :authenticate_user!, except: [:index, :show]
+
   def index
     @prototype = Prototype.new
     @prototypes = Prototype.includes(:user).order("created_at DESC")
@@ -21,9 +22,13 @@ class PrototypesController < ApplicationController
 
   def edit
     @prototype = Prototype.find(params[:id])
+    unless current_user == @prototype.user
+      redirect_to root_path
+    end
   end
 
   def update
+    @prototype = Prototype.find(params[:id])
     if Prototype.update(prototype_params)
       redirect_to prototype_path
     else
@@ -39,6 +44,8 @@ class PrototypesController < ApplicationController
 
   def show
     @prototype = Prototype.find(params[:id])
+    @comment = Comment.new
+    @comments = @prototype.comments
   end
 
   private
